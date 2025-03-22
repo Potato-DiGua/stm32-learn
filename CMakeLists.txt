@@ -23,18 +23,11 @@ set(ELF_TARGET ${PROJECT_NAME}.elf)
 
 
 add_definitions(-DSTM32F10X_MD)
+add_definitions(-DUSE_STDPERIPH_DRIVER)
 
 # CPU 架构
 set(CPU_FLAGS
     -mcpu=cortex-m3
-)
-
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/CMSIS/CM3/CoreSupport
-    ${CMAKE_SOURCE_DIR}/CMSIS/CM3/DeviceSupport/ST/STM32F10x
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/inc
-    ${CMAKE_SOURCE_DIR}/src
 )
 
 include(CheckIPOSupported)
@@ -47,35 +40,15 @@ check_ipo_supported(RESULT supported OUTPUT error)
 #     message(STATUS "IPO/LTO not supported: ${error}")
 # endif()
 
+file(GLOB_RECURSE AUTO_SOURCES 
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/*.c"
+    "${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/*.c"
+)
 set(SOURCES
-    ${CMAKE_SOURCE_DIR}/src/main.c
+    ${AUTO_SOURCES}
 
-    # ${CMAKE_SOURCE_DIR}/CMSIS/CM3/CoreSupport/core_cm3.c
+    ${CMAKE_SOURCE_DIR}/CMSIS/CM3/CoreSupport/core_cm3.c
     ${CMAKE_SOURCE_DIR}/CMSIS/CM3/DeviceSupport/ST/STM32F10x/system_stm32f10x.c
-
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/misc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_adc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_bkp.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_can.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_cec.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_crc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_dac.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_dbgmcu.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_dma.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_exti.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_flash.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_fsmc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_gpio.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_i2c.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_iwdg.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_pwr.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_rtc.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_sdio.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_spi.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_tim.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c
-    # ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/src/stm32f10x_wwdg.c
 )
 
 # 启动文件
@@ -86,6 +59,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # 添加可执行文件
 add_executable(${ELF_TARGET} ${SOURCES} ${STARTUP})
+
+target_include_directories(${ELF_TARGET} PRIVATE
+    ${CMAKE_SOURCE_DIR}/CMSIS/CM3/CoreSupport
+    ${CMAKE_SOURCE_DIR}/CMSIS/CM3/DeviceSupport/ST/STM32F10x
+    ${CMAKE_SOURCE_DIR}/STM32F10x_StdPeriph_Driver/inc
+    ${CMAKE_SOURCE_DIR}/src
+)
 
 # 链接器脚本
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/stm32f10x_flash.ld)
@@ -116,9 +96,6 @@ target_link_options(${ELF_TARGET} PRIVATE -T ${LINKER_SCRIPT}
 
 # 链接Newlib库
 # target_link_libraries(${ELF_TARGET} PRIVATE -lc -lgcc -lnosys)
-
-# 修改生成的文件名
-# set_target_properties(${ELF_TARGET} PROPERTIES OUTPUT_NAME "${PROJECT_NAME}" SUFFIX ".elf")
 
 # 生成二进制文件
 add_custom_command(TARGET ${ELF_TARGET} POST_BUILD

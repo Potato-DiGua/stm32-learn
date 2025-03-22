@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: build",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task",
+			"presentation": {
+				"panel": "dedicated",
+			}
+		},
+		{
+			"label": "烧录STM32程序",
+			"type": "shell",
+			"command": "${workspaceFolder}/deploy.sh",
+			"problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"dependsOn": ["CMake: build"],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+			}
+		}
+	]
+}

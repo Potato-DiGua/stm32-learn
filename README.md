@@ -1,6 +1,7 @@
 # STM32 项目
 
 这是一个基于STM32F10x系列微控制器的项目，使用CMake构建系统和ARM GCC编译器。
+[江科大stm32入门教程](https://www.bilibili.com/video/BV1th411z7sn)
 
 ## 在Windows下编译
 
