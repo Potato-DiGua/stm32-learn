@@ -16,15 +16,34 @@
 			}
 		},
 		{
-			"label": "烧录STM32程序",
+			"label": "deploy-led",
 			"type": "shell",
-			"command": "${workspaceFolder}/deploy.sh",
+			"command": "${workspaceFolder}/deploy.sh ${workspaceFolder}/bin/led.bin",
 			"problemMatcher": [],
 			"group": {
 				"kind": "test",
 				"isDefault": true
 			},
-			"dependsOn": ["CMake: build"],
+			"dependsOn": [
+				"CMake: build"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+			}
+		},
+		{
+			"label": "deploy-buzzer",
+			"type": "shell",
+			"command": "${workspaceFolder}/deploy.sh ${workspaceFolder}/bin/buzzer.bin",
+			"problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"dependsOn": [
+				"CMake: build"
+			],
 			"presentation": {
 				"reveal": "always",
 				"panel": "dedicated",

@@ -1,6 +1,6 @@
 #include "stm32f10x.h"
-#include "utils/Random.h"
-#include "utils/Delay.h"
+#include "Random.h"
+#include "Delay.h"
 
 typedef struct
 {
