@@ -8,7 +8,8 @@ typedef struct
     GPIO_TypeDef *GPIOx;
 } Pin;
 
-static inline void initRCC() {
+static inline void initRCC()
+{
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
@@ -52,14 +53,14 @@ int main(void)
         // 随机选择LED
         int randomIdx = Get_Random(len - 1, randomSeed);
         Pin pin = arr[randomIdx];
-        
+
         // 随机延时时间 (100-500ms)
         uint32_t delayTime = 100 + Get_Random(400, randomSeed);
-        
+
         GPIO_ResetBits(pin.GPIOx, pin.pin);
         Delay_ms(delayTime);
         GPIO_SetBits(pin.GPIOx, pin.pin);
-        Delay_ms(100);  // 短暂间隔
+        Delay_ms(100); // 短暂间隔
 
         // GPIO_ResetBits(GPIOB, GPIO_Pin_12);
         // Delay_ms(500);

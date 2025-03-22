@@ -1,14 +1,8 @@
 #include "stm32f10x.h"
-#include "Random.h"
 #include "Delay.h"
 
-typedef struct
+static inline void initRCC()
 {
-    uint16_t pin;
-    GPIO_TypeDef *GPIOx;
-} Pin;
-
-static inline void initRCC() {
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
     GPIO_InitTypeDef GPIO_InitStructure2;
