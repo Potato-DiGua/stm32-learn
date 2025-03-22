@@ -1,0 +1,1 @@
+sudo openocd -f "./stm32.cfg" -c init -c "reset halt; wait_halt; flash write_image erase bin/out.bin 0x08000000" -c reset -c shutdown
