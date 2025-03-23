@@ -1,4 +1,4 @@
-project(utils C ASM)
+project(utils CXX)
 
 # 创建库
 add_library(${PROJECT_NAME} INTERFACE)
@@ -8,8 +8,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 )
 
 set(SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Delay.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Random.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Delay.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Random.cpp
 )
 
 target_sources(${PROJECT_NAME} INTERFACE ${SOURCES})

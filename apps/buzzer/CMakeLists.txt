@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(buzzer C ASM)
+project(buzzer C CXX ASM)
 
 add_definitions(-DUSE_STDPERIPH_DRIVER)
 
-# CPU 架构
-set(CPU_FLAGS
-    -mcpu=cortex-m3
-)
-
-include(CheckIPOSupported)
-check_ipo_supported(RESULT supported OUTPUT error)
+# include(CheckIPOSupported)
+# check_ipo_supported(RESULT supported OUTPUT error)
 
 # 禁用LTO以解决链接问题
 # if(supported)
@@ -24,7 +19,7 @@ check_ipo_supported(RESULT supported OUTPUT error)
 set(ELF_TARGET ${PROJECT_NAME}.elf)
 
 set(SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/stm32f10x_it.c
 )
 
@@ -48,6 +43,10 @@ target_compile_options(${ELF_TARGET} PRIVATE
     -fdata-sections 
     -ffunction-sections
     -fmessage-length=0
+    # 禁用C++的异常处理机制
+    -fno-exceptions
+    # 禁用C++的RTTI机制
+    -fno-rtti
 )
 
 
@@ -59,9 +58,6 @@ target_link_options(${ELF_TARGET} PRIVATE -T ${LINKER_SCRIPT}
     -Wl,--cref
     -Wl,--print-memory-usage
 )
-
-# 链接Newlib库
-# target_link_libraries(${ELF_TARGET} PRIVATE -lc -lgcc -lnosys)
 
 # 生成二进制文件
 add_custom_command(TARGET ${ELF_TARGET} POST_BUILD
